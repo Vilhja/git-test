@@ -1,16 +1,16 @@
 package pl.vivaldi.matrix.model;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Random;
+
 
 public class Matrix {
     private int rowNumber;
     private int columnNumber;
     private double[][] matrixFields;
+
+    private Random random = new Random();
 
     public Matrix() {
         this(1, 1);
@@ -50,9 +50,7 @@ public class Matrix {
         Random random = new Random();
         for (int i = 0; i < matrixFields.length; i++) {
             for (int j = 0; j < matrixFields.length; j++) {
-                double d = -2 + (4 +2) * random.nextDouble();
-                BigDecimal decimal = BigDecimal.valueOf(d);
-                matrixFields[i][j] =decimal.setScale(1, RoundingMode.HALF_UP).doubleValue();
+                matrixFields[i][j] = generateRandomDouble(-4, 10, 1);
             }
         }
     }
@@ -63,12 +61,18 @@ public class Matrix {
                 if (j == 0) {
                     System.out.print("[ ");
                 }
-                System.out.print(matrixFields[i][j] + " ");
-                if (j == matrixFields.length - 1) {
-                    System.out.print(" ]");
+                System.out.print(matrixFields[i][j]);
+                if (j != matrixFields.length - 1) {
+                    System.out.print(" ");
                 }
             }
-            System.out.println();
+            System.out.println(" ]");
         }
+    }
+
+    private double generateRandomDouble(int minValue, int maxValue, int precision) {
+        double value = minValue + (maxValue - minValue) * random.nextDouble();
+        return BigDecimal.valueOf(value)
+                .setScale(precision, RoundingMode.HALF_UP).doubleValue();
     }
 }
