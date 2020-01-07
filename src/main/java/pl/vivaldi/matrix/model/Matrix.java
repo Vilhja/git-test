@@ -1,7 +1,6 @@
 package pl.vivaldi.matrix.model;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+
 import java.util.Random;
 
 
@@ -42,41 +41,11 @@ public class Matrix {
         return matrixFields;
     }
 
-    public double getElement(int row, int column) {
+    public double getMatrixElement(int row, int column) {
         return matrixFields[row][column];
     }
 
-    public void fillMatrix() {
-        Random random = new Random();
-        for (int i = 0; i < matrixFields.length; i++) {
-            for (int j = 0; j < matrixFields.length; j++) {
-                matrixFields[i][j] = generateRandomDouble(-4, 10, 1);
-            }
-        }
-    }
-
-    public void printMatrix() {
-        for (int i = 0; i < matrixFields.length; i++) {
-            for (int j = 0; j < matrixFields.length; j++) {
-                if (j == 0) {
-                    System.out.print("[ ");
-                }
-                System.out.print(matrixFields[i][j]);
-                if (j != matrixFields.length - 1) {
-                    System.out.print(" ");
-                }
-            }
-            System.out.println(" ]");
-        }
-    }
-
-    private double generateRandomDouble(int minValue, int maxValue, int precision) {
-        double value = minValue + (maxValue - minValue) * random.nextDouble();
-        return BigDecimal.valueOf(value)
-                .setScale(precision, RoundingMode.HALF_UP).doubleValue();
-    }
-
-    private void randomMthod(){
-        System.out.println("kotlet");
+    public void setMatrixElement(int row, int column, double value){
+        matrixFields[row][column] = value;
     }
 }
