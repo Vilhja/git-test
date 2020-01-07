@@ -75,4 +75,8 @@ public class Matrix {
         return BigDecimal.valueOf(value)
                 .setScale(precision, RoundingMode.HALF_UP).doubleValue();
     }
+
+    private void randomMthod(){
+        System.out.println("kotlet");
+    }
 }
