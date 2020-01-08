@@ -19,7 +19,7 @@ public class ConsolePrinter {
                     print("[ ");
                 }
                 System.out.print(matrixFields[i][j]);
-                if (j != matrixFields.length - 1) {
+                if (j != matrixFields[i].length - 1) {
                     print(" ");
                 }
             }

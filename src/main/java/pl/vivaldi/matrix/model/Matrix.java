@@ -45,7 +45,7 @@ public class Matrix {
         return matrixFields[row][column];
     }
 
-    public void setMatrixElement(int row, int column, double value){
+    public void setMatrixElement(int row, int column, double value) {
         matrixFields[row][column] = value;
     }
 }
