@@ -40,11 +40,7 @@ public class DataReader {
     }
 
     public Matrix createMatrix() {
-        printer.printLn("Podaj ilość wierszy:");
-        int rowNumber = getInt();
-        printer.printLn("Podaj ilość kolumn:");
-        int columnNumber = getInt();
-        Matrix matrix = new Matrix(rowNumber, columnNumber);
+        Matrix matrix = setMatrixSize();
         for (int i = 0; i < matrix.getRowNumber(); i++) {
             for (int j = 0; j < matrix.getColumnNumber(); j++) {
                 printer.printLn("Podaj element M[" + i + "," + j + "]:");
@@ -52,5 +48,13 @@ public class DataReader {
             }
         }
         return matrix;
+    }
+
+    private Matrix setMatrixSize() {
+        printer.printLn("Podaj ilość wierszy:");
+        int rowNumber = getInt();
+        printer.printLn("Podaj ilość kolumn:");
+        int columnNumber = getInt();
+        return new Matrix(rowNumber, columnNumber);
     }
 }

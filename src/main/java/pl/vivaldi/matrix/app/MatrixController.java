@@ -3,10 +3,12 @@ package pl.vivaldi.matrix.app;
 import pl.vivaldi.matrix.io.ConsolePrinter;
 import pl.vivaldi.matrix.io.DataReader;
 import pl.vivaldi.matrix.model.Matrix;
+import pl.vivaldi.matrix.operation.MatrixOperations;
 import pl.vivaldi.matrix.operation.MatrixRowOperations;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -18,6 +20,7 @@ public class MatrixController {
     private final static int ROW_MULTIPLICATION = 5;
     private final static int ROW_SWITCHING = 6;
     private final static int CREATE_MATRIX = 7;
+    private final static int TRANSPOSITION = 8;
     private final static int EXIT = 0;
 
     private ConsolePrinter printer = new ConsolePrinter();
@@ -35,8 +38,8 @@ public class MatrixController {
         int option;
         do {
             System.out.println("Wybierz: ");
-            System.out.println("1 - int , 2 - double, 3 - print");
-            System.out.println("4 - add , 5 - multi, 6 - switch, 7 - create matrix, 0 exit");
+            System.out.println("1 - int , 2 - double, 3 - print , 4 - add");
+            System.out.println("5 - multi, 6 - switch, 7 - create matrix, 8 - transpose 0 exit");
             Scanner scanner = new Scanner(System.in);
             option = scanner.nextInt();
             scanner.nextLine();
@@ -63,6 +66,9 @@ public class MatrixController {
                 case CREATE_MATRIX:
                     createMatrix();
                     break;
+                case TRANSPOSITION:
+                    transpose();
+                    break;
                 case EXIT:
                     exit();
                     break;
@@ -71,6 +77,7 @@ public class MatrixController {
             }
         } while (option != EXIT);
     }
+
 
     private void exit() {
         printer.printLn("Koniec!!!");
@@ -81,13 +88,24 @@ public class MatrixController {
     }
 
     private void fillMatrixWithRandomValues(NumberType numberType) {
+        printer.printLn("Podaj przedział generowanie elementów [a,b]:");
+        printer.printLn("a:");
+        int minValue = dataReader.getInt();
+        printer.printLn("b:");
+        int maxValue = dataReader.getInt();
+
         for (int i = 0; i < matrix.getRowNumber(); i++) {
             for (int j = 0; j < matrix.getColumnNumber(); j++) {
                 double value;
                 if (numberType == NumberType.DOUBLE) {
-                    value = generateRandomDouble(-5, 5, 1);
+                    int precision = 1;
+                    if (i == 0 && j == 0) {
+                        printer.printLn("Ustaw precyzję:");
+                        precision = dataReader.getInt();
+                    }
+                    value = generateRandomDouble(minValue, maxValue, precision);
                 } else {
-                    value = generateRandomInteger(-5, 5);
+                    value = generateRandomInteger(minValue, maxValue);
                 }
                 matrix.setMatrixElement(i, j, value);
             }
@@ -137,5 +155,9 @@ public class MatrixController {
 
     private void createMatrix() {
         matrix = dataReader.createMatrix();
+    }
+
+    private void transpose() {
+        matrix = MatrixOperations.transposition(matrix);
     }
 }
