@@ -8,10 +8,8 @@ public class MainApp {
 
         Matrix matrix = new Matrix(4,3);
         MatrixController matrixController = new MatrixController(matrix);
-        matrixController.printMatrix();
 
         System.out.println();
-
         matrixController.operationsLoop();
     }
 }

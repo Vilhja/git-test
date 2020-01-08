@@ -9,6 +9,11 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MatrixController {
+    private final static int INTEGER_MATRIX = 1;
+    private final static int DOUBLE_MATRIX = 2;
+    private final static int PRINT_MATRIX = 3;
+    private final static int EXIT = 0;
+
     private ConsolePrinter printer = new ConsolePrinter();
     private Random generator = new Random();
 
@@ -25,19 +30,26 @@ public class MatrixController {
             scanner.nextLine();
 
             switch (option) {
-                case 1:
-                    fillMatrixWithRandomValues(NumberType.DOUBLE);
-                    break;
-                case 2:
+                case INTEGER_MATRIX:
                     fillMatrixWithRandomValues(NumberType.INTEGER);
                     break;
-                case 3:
+                case DOUBLE_MATRIX:
+                    fillMatrixWithRandomValues(NumberType.DOUBLE);
+                    break;
+                case PRINT_MATRIX:
                     printMatrix();
                     break;
+                case EXIT:
+                    exit();
+                    break;
                 default:
-                    System.out.println("Coś się popsuło");
+                    printer.printLn("Nie ma podanej opcji!");
             }
-        } while (option != 0);
+        } while (option != EXIT);
+    }
+
+    private void exit() {
+        printer.printLn("Koniec!!!");
     }
 
     public MatrixController(Matrix matrix) {
