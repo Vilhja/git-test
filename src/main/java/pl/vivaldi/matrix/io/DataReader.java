@@ -2,7 +2,6 @@ package pl.vivaldi.matrix.io;
 
 import pl.vivaldi.matrix.model.Matrix;
 
-import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class DataReader {
@@ -35,9 +34,9 @@ public class DataReader {
         if (split.length == 1) {
             return Double.parseDouble(split[0]);
         }
-        BigDecimal numerator = new BigDecimal(split[0]);
-        BigDecimal denominator = new BigDecimal(split[1]);
-        return numerator.doubleValue() / denominator.doubleValue();
+        double numerator = Double.parseDouble(split[0]);
+        double denominator = Double.parseDouble(split[1]);
+        return numerator / denominator;
     }
 
     public Matrix createMatrix() {
