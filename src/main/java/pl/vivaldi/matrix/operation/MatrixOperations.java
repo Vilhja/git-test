@@ -69,8 +69,9 @@ public class MatrixOperations {
             Matrix resultMatrix = new Matrix(matrix.getRowNumber() - 1,
                     matrix.getColumnNumber() - 1);
             boolean isRowAndColumnToRemoveMet = false;
-
+            boolean isRowRemovalStart = false;
             for (int i = 0; i < resultMatrix.getRowNumber(); i++) {
+                boolean isColumnRemovalStart = false;
                 for (int j = 0; j < resultMatrix.getColumnNumber(); j++) {
                     double value;
                     if (i == rowToRemove && j == columnToRemove) {
@@ -82,17 +83,23 @@ public class MatrixOperations {
                         } else {
                             value = matrix.getMatrixElement(i + 1, j);
                         }
+                        isRowRemovalStart = true;
                     } else if (j == columnToRemove) {
                         if (isRowAndColumnToRemoveMet) {
                             value = matrix.getMatrixElement(i + 1, j + 1);
                         } else {
                             value = matrix.getMatrixElement(i, j + 1);
                         }
+                        isColumnRemovalStart = true;
                     } else {
                         if (isRowAndColumnToRemoveMet && columnToRemove == rowToRemove) {
-                            value = matrix.getMatrixElement(i + 1, j + 1);
+                            value = matrix.getMatrixElement(i + 1, j);
                         } else {
-                            value = matrix.getMatrixElement(i, j);
+                            if (isColumnRemovalStart) {
+                                value = matrix.getMatrixElement(i, j + 1);
+                            } else {
+                                value = matrix.getMatrixElement(i, j);
+                            }
                         }
                     }
                     resultMatrix.setMatrixElement(i, j, value);
