@@ -262,7 +262,7 @@ public class MatrixController {
     }
 
     private void saveMatrixToFile() {
-        String fileName = "src/main/resources/matrices/";
+        String fileName = "src/main/resources/matrices/user/";
         printer.printLn("Insert filename:");
         fileName += dataReader.getString();
         fileName += ".txt";
@@ -270,7 +270,7 @@ public class MatrixController {
     }
 
     private void loadMatrixFromFile() {
-        String fileName = "src/main/resources/matrices/";
+        String fileName = "src/main/resources/matrices/user/";
         printer.printLn("Insert filename:");
         fileName += dataReader.getString();
         fileName += ".txt";
