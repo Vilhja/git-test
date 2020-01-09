@@ -56,10 +56,41 @@ public class MatrixOperations {
             }
             return resultMatrix;
         }
+        //optional needed
         return null;
     }
 
     private static boolean checkMultiplicationCondition(Matrix matrixA, Matrix matrixB) {
         return matrixA.getColumnNumber() == matrixB.getRowNumber();
+    }
+
+    public static Matrix subMatrix(Matrix matrix, int rowToRemove, int columnToRemove) {
+        if (checkSubMatrixCondition(matrix)) {
+            Matrix resultMatrix = new Matrix(matrix.getRowNumber() - 1,
+                    matrix.getColumnNumber() - 1);
+            boolean isRemovalStarts = false;
+            for (int i = 0; i < resultMatrix.getRowNumber(); i++) {
+                for (int j = 0; j < resultMatrix.getColumnNumber(); j++) {
+                    double value;
+                    if (i == rowToRemove && j == columnToRemove) {
+                        value = matrix.getMatrixElement(i + 1, j + 1);
+                        isRemovalStarts = true;
+                    } else if (!isRemovalStarts) {
+                        value = matrix.getMatrixElement(i, j);
+                    } else {
+                        value = matrix.getMatrixElement(i + 1, j + 1);
+                    }
+                    resultMatrix.setMatrixElement(i, j, value);
+                }
+            }
+            return resultMatrix;
+        }
+        //optional
+        return null;
+    }
+
+    private static boolean checkSubMatrixCondition(Matrix matrix) {
+        if (matrix.getRowNumber() >= 2) return true;
+        return matrix.getColumnNumber() >= 2;
     }
 }

@@ -21,6 +21,7 @@ public class MatrixController {
     private final static int CREATE_MATRIX = 7;
     private final static int TRANSPOSITION = 8;
     private final static int MULTIPLICATION = 9;
+    private final static int SUBMATRIX = 10;
     private final static int EXIT = 0;
 
     private ConsolePrinter printer = new ConsolePrinter();
@@ -71,6 +72,10 @@ public class MatrixController {
                     break;
                 case MULTIPLICATION:
                     multiply();
+                    break;
+                case SUBMATRIX:
+                    createSubMatrix();
+                    break;
                 case EXIT:
                     exit();
                     break;
@@ -166,5 +171,13 @@ public class MatrixController {
         Matrix matrixA = dataReader.createMatrix();
         Matrix matrixB = dataReader.createMatrix();
         matrix = MatrixOperations.multiplication(matrixA, matrixB);
+    }
+
+    private void createSubMatrix() {
+        printer.printLn("Który, wiersz usunąć?");
+        int rowToRemove = dataReader.getInt();
+        printer.printLn("Którą kolumnę usunąć?");
+        int columnToRemove = dataReader.getInt();
+        matrix = MatrixOperations.subMatrix(this.matrix, rowToRemove, columnToRemove);
     }
 }
