@@ -43,17 +43,17 @@ public class DataReader {
         Matrix matrix = setMatrixSize();
         for (int i = 0; i < matrix.getRowNumber(); i++) {
             for (int j = 0; j < matrix.getColumnNumber(); j++) {
-                printer.printLn("Podaj element M[" + i + "," + j + "]:");
+                printer.printLn("Insert element M[" + i + "," + j + "]:");
                 matrix.setMatrixElement(i, j, getDoubleFromString());
             }
         }
         return matrix;
     }
 
-    private Matrix setMatrixSize() {
-        printer.printLn("Podaj ilość wierszy:");
+    public Matrix setMatrixSize() {
+        printer.printLn("Insert row number:");
         int rowNumber = getInt();
-        printer.printLn("Podaj ilość kolumn:");
+        printer.printLn("Insert column number:");
         int columnNumber = getInt();
         return new Matrix(rowNumber, columnNumber);
     }

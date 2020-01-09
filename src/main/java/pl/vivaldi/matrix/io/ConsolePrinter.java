@@ -7,8 +7,16 @@ public class ConsolePrinter {
         System.out.println(text);
     }
 
+    public void printOption(String text) {
+        System.out.println(text.toUpperCase());
+    }
+
     public void print(String text) {
         System.out.print(text);
+    }
+
+    public void printErr(String errorText) {
+        System.err.println(errorText);
     }
 
     public void printMatrix(Matrix matrix) {

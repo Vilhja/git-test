@@ -8,22 +8,12 @@ import pl.vivaldi.matrix.operation.MatrixRowOperations;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.Scanner;
+
 
 public class MatrixController {
-    private final static int INTEGER_MATRIX = 1;
-    private final static int DOUBLE_MATRIX = 2;
-    private final static int PRINT_MATRIX = 3;
-    private final static int ROW_ADDITION = 4;
-    private final static int ROW_MULTIPLICATION = 5;
-    private final static int ROW_SWITCHING = 6;
-    private final static int CREATE_MATRIX = 7;
-    private final static int TRANSPOSITION = 8;
-    private final static int MULTIPLICATION = 9;
-    private final static int SUBMATRIX = 10;
-    private final static int EXIT = 0;
-
     private ConsolePrinter printer = new ConsolePrinter();
     private Random generator = new Random();
     private DataReader dataReader = new DataReader(printer);
@@ -36,14 +26,10 @@ public class MatrixController {
 
     public void operationsLoop() {
 
-        int option;
+        Option option;
         do {
-            System.out.println("Wybierz: ");
-            System.out.println("1 - int , 2 - double, 3 - print , 4 - add");
-            System.out.println("5 - multi, 6 - switch, 7 - create matrix, 8 - transpose 0 exit");
-            Scanner scanner = new Scanner(System.in);
-            option = scanner.nextInt();
-            scanner.nextLine();
+            printOptions();
+            option = getOption();
 
             switch (option) {
                 case INTEGER_MATRIX:
@@ -73,6 +59,9 @@ public class MatrixController {
                 case MULTIPLICATION:
                     multiply();
                     break;
+                case ADDITION:
+                    add();
+                    break;
                 case SUBMATRIX:
                     createSubMatrix();
                     break;
@@ -80,21 +69,77 @@ public class MatrixController {
                     exit();
                     break;
                 default:
-                    printer.printLn("Nie ma podanej opcji!");
+                    printer.printLn("No such option!");
             }
-        } while (option != EXIT);
+        } while (option != Option.EXIT);
+    }
+
+    private Option getOption() {
+        boolean isOptionChosen = false;
+        Option option = null;
+        while (!isOptionChosen) {
+            try {
+                option = Option.getOption(dataReader.getInt());
+                isOptionChosen = true;
+            } catch (InputMismatchException e) {
+                printer.printErr("Wrong data type, please insert the number:");
+            } catch (NoSuchElementException e) {
+                printer.printErr(e.getMessage());
+            }
+        }
+        return option;
+    }
+
+    private void printOptions() {
+        printer.printLn("Choose option:");
+        for (Option option : Option.values()) {
+            printer.printOption(option.toString());
+        }
+    }
+
+    private enum Option {
+        EXIT(0, "exit program"),
+        INTEGER_MATRIX(1, "fill matrix with random integers"),
+        DOUBLE_MATRIX(2, "fill matrix with random doubles"),
+        PRINT_MATRIX(3, "print matrix"),
+        ROW_ADDITION(4, "add rows in matrix"),
+        ROW_MULTIPLICATION(5, "multiply row per non-zero constant"),
+        ROW_SWITCHING(6, "switch rows"),
+        CREATE_MATRIX(7, "insert values to matrix"),
+        TRANSPOSITION(8, "transpose matrix"),
+        MULTIPLICATION(9, "multiply matrices"),
+        ADDITION(10, "add matrices"),
+        SUBMATRIX(11, "submatrix");
+
+        private final int value;
+        private final String description;
+
+        Option(int value, String description) {
+            this.value = value;
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return value + " - " + description;
+        }
+
+        static Option getOption(int value) {
+            try {
+                return Option.values()[value];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new NoSuchElementException("No such option id: " + value);
+            }
+        }
     }
 
     private void exit() {
-        printer.printLn("Koniec!!!");
-    }
-
-    private void printMatrix() {
-        printer.printMatrix(matrix);
+        printer.printLn("The end has come!!!");
     }
 
     private void fillMatrixWithRandomValues(NumberType numberType) {
-        printer.printLn("Podaj przedział generowanie elementów [a,b]:");
+        matrix = dataReader.setMatrixSize();
+        printer.printLn("Set the range of randomizing [a,b]:");
         printer.printLn("a:");
         int minValue = dataReader.getInt();
         printer.printLn("b:");
@@ -106,7 +151,7 @@ public class MatrixController {
                 if (numberType == NumberType.DOUBLE) {
                     int precision = 1;
                     if (i == 0 && j == 0) {
-                        printer.printLn("Ustaw precyzję:");
+                        printer.printLn("set precision:");
                         precision = dataReader.getInt();
                     }
                     value = generateRandomDouble(minValue, maxValue, precision);
@@ -132,29 +177,33 @@ public class MatrixController {
         INTEGER, DOUBLE
     }
 
+    private void printMatrix() {
+        printer.printMatrix(matrix);
+    }
+
     private void addRows() {
-        printer.printLn("Podaj wiersz do zmodyfikowania:");
+        printer.printLn("Which row you want to modify?");
         int row = dataReader.getInt();
-        printer.printLn("Który wiersz chcesz dodać:");
+        printer.printLn("Which row you want to add to that row?");
         int rowToAdd = dataReader.getInt();
-        printer.printLn("i przez jaką wartość chcesz go przemnożyć:");
+        printer.printLn("What is the value, you want to multiply by?");
         double nonZeroConstant = dataReader.getDoubleFromString();
         MatrixRowOperations.rowAddition(matrix, row, rowToAdd, nonZeroConstant);
     }
 
     private void multiplyRow() {
-        printer.printLn("Który wiersz chcesz pomnożyć?");
+        printer.printLn("Which row, you want to multiply?");
         int row = dataReader.getInt();
-        printer.printLn("i przez jaką wartość?");
+        printer.printLn("What is the value, you want to multiply by?");
         double nonZeroConstant = dataReader.getDoubleFromString();
         MatrixRowOperations.rowMultiplication(matrix, row, nonZeroConstant);
     }
 
     private void switchRows() {
-        printer.printLn("Które wiersze chcesz zamienić?");
-        printer.printLn("Wiersz:");
+        printer.printLn("Which rows , you want to switch?");
+        printer.printLn("Row:");
         int row1 = dataReader.getInt();
-        printer.printLn("z wierszem:");
+        printer.printLn("with row:");
         int row2 = dataReader.getInt();
         MatrixRowOperations.rowSwitching(matrix, row1, row2);
     }
@@ -173,10 +222,16 @@ public class MatrixController {
         matrix = MatrixOperations.multiplication(matrixA, matrixB);
     }
 
+    private void add() {
+        Matrix matrixA = dataReader.createMatrix();
+        Matrix matrixB = dataReader.createMatrix();
+        matrix = MatrixOperations.addition(matrixA, matrixB);
+    }
+
     private void createSubMatrix() {
-        printer.printLn("Który, wiersz usunąć?");
+        printer.printLn("Which row, you want to remove?");
         int rowToRemove = dataReader.getInt();
-        printer.printLn("Którą kolumnę usunąć?");
+        printer.printLn("Which column, you want to remove?");
         int columnToRemove = dataReader.getInt();
         matrix = MatrixOperations.subMatrix(this.matrix, rowToRemove, columnToRemove);
     }
