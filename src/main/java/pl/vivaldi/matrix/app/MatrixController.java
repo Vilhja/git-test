@@ -76,6 +76,9 @@ public class MatrixController {
                 case SAVE_TO_FILE:
                     saveMatrixToFile();
                     break;
+                case LOAD_FROM_FILE:
+                    loadMatrixFromFile();
+                    break;
                 default:
                     printer.printLn("No such option!");
             }
@@ -119,7 +122,8 @@ public class MatrixController {
         ADDITION(10, "add matrices"),
         SUBMATRIX(11, "submatrix"),
         TEST_MATRIX(12, "create test matrix[5,5] = {1,2 ... 25}"),
-        SAVE_TO_FILE(13, "save matrix to file");
+        SAVE_TO_FILE(13, "save matrix to file"),
+        LOAD_FROM_FILE(14,"load matrix from file");
 
         private final int value;
         private final String description;
@@ -263,5 +267,13 @@ public class MatrixController {
         fileName += dataReader.getString();
         fileName += ".txt";
         fileManager.saveMatrixToFile(matrix, fileName);
+    }
+
+    private void loadMatrixFromFile() {
+        String fileName = "src/main/resources/matrices/";
+        printer.printLn("Insert filename:");
+        fileName += dataReader.getString();
+        fileName += ".txt";
+        matrix = fileManager.loadMatrixFromFile(fileName);
     }
 }
