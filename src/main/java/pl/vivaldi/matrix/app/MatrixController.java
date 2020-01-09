@@ -8,7 +8,6 @@ import pl.vivaldi.matrix.operation.MatrixRowOperations;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Instant;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -21,6 +20,7 @@ public class MatrixController {
     private final static int ROW_SWITCHING = 6;
     private final static int CREATE_MATRIX = 7;
     private final static int TRANSPOSITION = 8;
+    private final static int MULTIPLICATION = 9;
     private final static int EXIT = 0;
 
     private ConsolePrinter printer = new ConsolePrinter();
@@ -58,7 +58,7 @@ public class MatrixController {
                     addRows();
                     break;
                 case ROW_MULTIPLICATION:
-                    multiplicateRow();
+                    multiplyRow();
                     break;
                 case ROW_SWITCHING:
                     switchRows();
@@ -69,6 +69,8 @@ public class MatrixController {
                 case TRANSPOSITION:
                     transpose();
                     break;
+                case MULTIPLICATION:
+                    multiply();
                 case EXIT:
                     exit();
                     break;
@@ -77,7 +79,6 @@ public class MatrixController {
             }
         } while (option != EXIT);
     }
-
 
     private void exit() {
         printer.printLn("Koniec!!!");
@@ -136,7 +137,7 @@ public class MatrixController {
         MatrixRowOperations.rowAddition(matrix, row, rowToAdd, nonZeroConstant);
     }
 
-    private void multiplicateRow() {
+    private void multiplyRow() {
         printer.printLn("Który wiersz chcesz pomnożyć?");
         int row = dataReader.getInt();
         printer.printLn("i przez jaką wartość?");
@@ -159,5 +160,11 @@ public class MatrixController {
 
     private void transpose() {
         matrix = MatrixOperations.transposition(matrix);
+    }
+
+    private void multiply() {
+        Matrix matrixA = dataReader.createMatrix();
+        Matrix matrixB = dataReader.createMatrix();
+        matrix = MatrixOperations.multiplication(matrixA, matrixB);
     }
 }

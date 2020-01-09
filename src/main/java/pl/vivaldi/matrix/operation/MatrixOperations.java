@@ -40,4 +40,26 @@ public class MatrixOperations {
         }
         return transposedMatrix;
     }
+
+    public static Matrix multiplication(Matrix matrixA, Matrix matrixB) {
+        if (checkMultiplicationCondition(matrixA, matrixB)) {
+            Matrix resultMatrix = new Matrix(matrixA.getRowNumber(), matrixB.getColumnNumber());
+            for (int i = 0; i < resultMatrix.getRowNumber(); i++) {
+                for (int j = 0; j < resultMatrix.getColumnNumber(); j++) {
+                    double sum = 0.0;
+                    for (int k = 0; k < matrixA.getColumnNumber(); k++) {
+                        sum += matrixA.getMatrixElement(i, k)
+                                * matrixB.getMatrixElement(k, j);
+                    }
+                    resultMatrix.setMatrixElement(i, j, sum);
+                }
+            }
+            return resultMatrix;
+        }
+        return null;
+    }
+
+    private static boolean checkMultiplicationCondition(Matrix matrixA, Matrix matrixB) {
+        return matrixA.getColumnNumber() == matrixB.getRowNumber();
+    }
 }
