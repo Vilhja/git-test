@@ -2,6 +2,7 @@ package pl.vivaldi.matrix.app;
 
 import pl.vivaldi.matrix.io.ConsolePrinter;
 import pl.vivaldi.matrix.io.DataReader;
+import pl.vivaldi.matrix.io.file.FileManager;
 import pl.vivaldi.matrix.model.Matrix;
 import pl.vivaldi.matrix.operation.MatrixOperations;
 import pl.vivaldi.matrix.operation.MatrixRowOperations;
@@ -17,6 +18,7 @@ public class MatrixController {
     private ConsolePrinter printer = new ConsolePrinter();
     private Random generator = new Random();
     private DataReader dataReader = new DataReader(printer);
+    private FileManager fileManager = new FileManager(dataReader, printer);
 
     private Matrix matrix;
 
@@ -71,6 +73,9 @@ public class MatrixController {
                 case TEST_MATRIX:
                     createTestMatrix();
                     break;
+                case SAVE_TO_FILE:
+                    saveMatrixToFile();
+                    break;
                 default:
                     printer.printLn("No such option!");
             }
@@ -113,7 +118,8 @@ public class MatrixController {
         MULTIPLICATION(9, "multiply matrices"),
         ADDITION(10, "add matrices"),
         SUBMATRIX(11, "submatrix"),
-        TEST_MATRIX(12, "create test matrix[5,5] = {1,2 ... 25}");
+        TEST_MATRIX(12, "create test matrix[5,5] = {1,2 ... 25}"),
+        SAVE_TO_FILE(13, "save matrix to file");
 
         private final int value;
         private final String description;
@@ -249,5 +255,13 @@ public class MatrixController {
                 value++;
             }
         }
+    }
+
+    private void saveMatrixToFile() {
+        String fileName = "src/main/resources/matrices/";
+        printer.printLn("Insert filename:");
+        fileName += dataReader.getString();
+        fileName += ".txt";
+        fileManager.saveMatrixToFile(matrix, fileName);
     }
 }

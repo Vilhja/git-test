@@ -39,6 +39,10 @@ public class DataReader {
         return numerator / denominator;
     }
 
+    public String getString() {
+        return scanner.nextLine();
+    }
+
     public Matrix createMatrix() {
         Matrix matrix = setMatrixSize();
         for (int i = 0; i < matrix.getRowNumber(); i++) {
