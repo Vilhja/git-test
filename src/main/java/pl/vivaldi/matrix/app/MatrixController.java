@@ -68,6 +68,9 @@ public class MatrixController {
                 case EXIT:
                     exit();
                     break;
+                case TEST_MATRIX:
+                    createTestMatrix();
+                    break;
                 default:
                     printer.printLn("No such option!");
             }
@@ -109,7 +112,8 @@ public class MatrixController {
         TRANSPOSITION(8, "transpose matrix"),
         MULTIPLICATION(9, "multiply matrices"),
         ADDITION(10, "add matrices"),
-        SUBMATRIX(11, "submatrix");
+        SUBMATRIX(11, "submatrix"),
+        TEST_MATRIX(12, "create test matrix[5,5] = {1,2 ... 25}");
 
         private final int value;
         private final String description;
@@ -234,5 +238,16 @@ public class MatrixController {
         printer.printLn("Which column, you want to remove?");
         int columnToRemove = dataReader.getInt();
         matrix = MatrixOperations.subMatrix(this.matrix, rowToRemove, columnToRemove);
+    }
+
+    private void createTestMatrix() {
+        matrix = new Matrix(5, 5);
+        double value = 1;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                matrix.setMatrixElement(i, j, value);
+                value++;
+            }
+        }
     }
 }

@@ -68,47 +68,34 @@ public class MatrixOperations {
         if (checkSubMatrixCondition(matrix)) {
             Matrix resultMatrix = new Matrix(matrix.getRowNumber() - 1,
                     matrix.getColumnNumber() - 1);
-            boolean isRowAndColumnToRemoveMet = false;
-            boolean isRowRemovalStart = false;
-            for (int i = 0; i < resultMatrix.getRowNumber(); i++) {
-                boolean isColumnRemovalStart = false;
-                for (int j = 0; j < resultMatrix.getColumnNumber(); j++) {
-                    double value;
-                    if (i == rowToRemove && j == columnToRemove) {
-                        value = matrix.getMatrixElement(i + 1, j + 1);
-                        isRowAndColumnToRemoveMet = true;
-                    } else if (i == rowToRemove) {
-                        if (isRowAndColumnToRemoveMet) {
-                            value = matrix.getMatrixElement(i + 1, j + 1);
-                        } else {
-                            value = matrix.getMatrixElement(i + 1, j);
-                        }
-                        isRowRemovalStart = true;
-                    } else if (j == columnToRemove) {
-                        if (isRowAndColumnToRemoveMet) {
-                            value = matrix.getMatrixElement(i + 1, j + 1);
-                        } else {
-                            value = matrix.getMatrixElement(i, j + 1);
-                        }
-                        isColumnRemovalStart = true;
-                    } else {
-                        if (isRowAndColumnToRemoveMet && columnToRemove == rowToRemove) {
-                            value = matrix.getMatrixElement(i + 1, j);
-                        } else {
-                            if (isColumnRemovalStart) {
-                                value = matrix.getMatrixElement(i, j + 1);
-                            } else {
-                                value = matrix.getMatrixElement(i, j);
-                            }
-                        }
-                    }
-                    resultMatrix.setMatrixElement(i, j, value);
-                }
-            }
+            resultMatrix = removeMatrixRow(matrix, rowToRemove);
+            resultMatrix = removeMatrixColumn(resultMatrix, columnToRemove);
             return resultMatrix;
         }
         //optional
         return null;
+    }
+
+    private static Matrix removeMatrixRow(Matrix matrix, int rowNumber) {
+        Matrix resultMatrix = new Matrix(matrix.getRowNumber() - 1, matrix.getColumnNumber());
+        for (int i = 0; i < resultMatrix.getRowNumber(); i++) {
+            for (int j = 0; j < resultMatrix.getColumnNumber(); j++) {
+                double value;
+                if (i < rowNumber) {
+                    value = matrix.getMatrixElement(i, j);
+                }else {
+                    value = matrix.getMatrixElement(i + 1, j);
+                }
+                resultMatrix.setMatrixElement(i, j, value);
+            }
+        }
+        return resultMatrix;
+    }
+
+    private static Matrix removeMatrixColumn(Matrix matrix, int columnNumber) {
+        Matrix transposedMatrix = transposition(matrix);
+        matrix = removeMatrixRow(transposedMatrix, columnNumber);
+        return transposition(matrix);
     }
 
     private static boolean checkSubMatrixCondition(Matrix matrix) {
