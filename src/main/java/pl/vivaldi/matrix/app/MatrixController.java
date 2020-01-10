@@ -15,6 +15,9 @@ import java.util.Random;
 
 
 public class MatrixController {
+    private final static String USER_MATRICES_DIRECTORY_PATH = "src/main/resources/matrices/user/";
+    private final static String TEST_MATRICES_DIRECTORY_PATH = "src/main/resources/matrices/test/";
+
     private ConsolePrinter printer = new ConsolePrinter();
     private Random generator = new Random();
     private DataReader dataReader = new DataReader(printer);
@@ -77,7 +80,7 @@ public class MatrixController {
                     saveMatrixToFile();
                     break;
                 case LOAD_FROM_FILE:
-                    loadMatrixFromFile();
+                    loadMatrixFromFile(USER_MATRICES_DIRECTORY_PATH);
                     break;
                 default:
                     printer.printLn("No such option!");
@@ -121,9 +124,9 @@ public class MatrixController {
         MULTIPLICATION(9, "multiply matrices"),
         ADDITION(10, "add matrices"),
         SUBMATRIX(11, "submatrix"),
-        TEST_MATRIX(12, "create test matrix[5,5] = {1,2 ... 25}"),
+        TEST_MATRIX(12, "load test matrix"),
         SAVE_TO_FILE(13, "save matrix to file"),
-        LOAD_FROM_FILE(14,"load matrix from file");
+        LOAD_FROM_FILE(14, "load matrix from file");
 
         private final int value;
         private final String description;
@@ -223,6 +226,7 @@ public class MatrixController {
     }
 
     private void createMatrix() {
+
         matrix = dataReader.createMatrix();
     }
 
@@ -251,14 +255,7 @@ public class MatrixController {
     }
 
     private void createTestMatrix() {
-        matrix = new Matrix(5, 5);
-        double value = 1;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                matrix.setMatrixElement(i, j, value);
-                value++;
-            }
-        }
+        loadMatrixFromFile(TEST_MATRICES_DIRECTORY_PATH);
     }
 
     private void saveMatrixToFile() {
@@ -269,11 +266,37 @@ public class MatrixController {
         fileManager.saveMatrixToFile(matrix, fileName);
     }
 
-    private void loadMatrixFromFile() {
-        String fileName = "src/main/resources/matrices/user/";
+    private void loadMatrixFromFile(String fileName) {
+
         printer.printLn("Insert filename:");
         fileName += dataReader.getString();
         fileName += ".txt";
         matrix = fileManager.loadMatrixFromFile(fileName);
+    }
+
+    private enum DirectoryPath {
+        TEST(0, "Test directory"),
+        USER(1, "User directory");
+
+        private int value;
+        private String description;
+
+        DirectoryPath(int value, String description) {
+            this.value = value;
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return value + " - " + description;
+        }
+
+        public DirectoryPath getOption(int value) {
+            try {
+                return DirectoryPath.values()[value];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new NoSuchElementException("No such option id: " + value);
+            }
+        }
     }
 }
