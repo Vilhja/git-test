@@ -2,6 +2,7 @@ package pl.vivaldi.matrix.io;
 
 import pl.vivaldi.matrix.model.Matrix;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class DataReader {
@@ -43,7 +44,7 @@ public class DataReader {
         return scanner.nextLine();
     }
 
-    public Matrix createMatrix() {
+    public Optional<Matrix> createMatrix() {
         Matrix matrix = setMatrixSize();
         for (int i = 0; i < matrix.getRowNumber(); i++) {
             for (int j = 0; j < matrix.getColumnNumber(); j++) {
@@ -51,7 +52,7 @@ public class DataReader {
                 matrix.setMatrixElement(i, j, getDoubleFromString());
             }
         }
-        return matrix;
+        return Optional.of(matrix);
     }
 
     public Matrix setMatrixSize() {

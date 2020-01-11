@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -73,14 +74,8 @@ public class MatrixController {
                 case EXIT:
                     exit();
                     break;
-                case TEST_MATRIX:
-                    createTestMatrix();
-                    break;
                 case SAVE_TO_FILE:
                     saveMatrixToFile();
-                    break;
-                case LOAD_FROM_FILE:
-                    loadMatrixFromFile(USER_MATRICES_DIRECTORY_PATH);
                     break;
                 default:
                     printer.printLn("No such option!");
@@ -119,14 +114,12 @@ public class MatrixController {
         ROW_ADDITION(4, "add rows in matrix"),
         ROW_MULTIPLICATION(5, "multiply row per non-zero constant"),
         ROW_SWITCHING(6, "switch rows"),
-        CREATE_MATRIX(7, "insert values to matrix"),
+        CREATE_MATRIX(7, "create matrix (inserting or file loading)"),
         TRANSPOSITION(8, "transpose matrix"),
         MULTIPLICATION(9, "multiply matrices"),
         ADDITION(10, "add matrices"),
         SUBMATRIX(11, "submatrix"),
-        TEST_MATRIX(12, "load test matrix"),
-        SAVE_TO_FILE(13, "save matrix to file"),
-        LOAD_FROM_FILE(14, "load matrix from file");
+        SAVE_TO_FILE(12, "save matrix to file");
 
         private final int value;
         private final String description;
@@ -226,8 +219,42 @@ public class MatrixController {
     }
 
     private void createMatrix() {
+        createMatrixOptional().ifPresent(value -> matrix = value);
+    }
 
-        matrix = dataReader.createMatrix();
+    private Matrix createMatrixFromOptional() {
+        createMatrix();
+        return matrix;
+    }
+
+    private Optional<Matrix> createMatrixOptional() {
+        int option = chooseCreatingOption();
+        switch (option) {
+            case 1:
+                return dataReader.createMatrix();
+            case 2:
+                int loadOption = chooseLoadingOption();
+                switch (loadOption) {
+                    case 1:
+                        return loadMatrixFromFile(TEST_MATRICES_DIRECTORY_PATH);
+                    case 2:
+                        return loadMatrixFromFile(USER_MATRICES_DIRECTORY_PATH);
+                    default:
+                        printer.printErr("No such loading option!");
+                }
+                break;
+            default:
+                printer.printErr("No such creating option!");
+
+        }
+        return Optional.empty();
+    }
+
+    private int chooseCreatingOption() {
+        printer.printLn("Create matrix by:");
+        printer.printLn("1 - inserting values");
+        printer.printLn("2 - loading from file");
+        return dataReader.getInt();
     }
 
     private void transpose() {
@@ -235,19 +262,15 @@ public class MatrixController {
     }
 
     private void multiply() {
-        Matrix matrixA = dataReader.createMatrix();
-        Matrix matrixB = dataReader.createMatrix();
-        if (MatrixOperations.multiplication(matrixA, matrixB).isPresent()) {
-            matrix = MatrixOperations.multiplication(matrixA, matrixB).get();
-        }
+        Matrix matrixA = createMatrixFromOptional();
+        Matrix matrixB = createMatrixFromOptional();
+        MatrixOperations.multiplication(matrixA, matrixB).ifPresent(value -> matrix = value);
     }
 
     private void add() {
-        Matrix matrixA = dataReader.createMatrix();
-        Matrix matrixB = dataReader.createMatrix();
-        if (MatrixOperations.addition(matrixA, matrixB).isPresent()) {
-            matrix = MatrixOperations.addition(matrixA, matrixB).get();
-        }
+        Matrix matrixA = createMatrixFromOptional();
+        Matrix matrixB = createMatrixFromOptional();
+        MatrixOperations.addition(matrixA, matrixB).ifPresent(value -> matrix = value);
     }
 
     private void createSubMatrix() {
@@ -255,13 +278,8 @@ public class MatrixController {
         int rowToRemove = dataReader.getInt();
         printer.printLn("Which column, you want to remove?");
         int columnToRemove = dataReader.getInt();
-        if (MatrixOperations.subMatrix(matrix, rowToRemove, columnToRemove).isPresent()) {
-            matrix = MatrixOperations.subMatrix(matrix, rowToRemove, columnToRemove).get();
-        }
-    }
-
-    private void createTestMatrix() {
-        loadMatrixFromFile(TEST_MATRICES_DIRECTORY_PATH);
+        MatrixOperations.subMatrix(matrix, rowToRemove, columnToRemove).
+                ifPresent(value -> matrix = value);
     }
 
     private void saveMatrixToFile() {
@@ -272,39 +290,17 @@ public class MatrixController {
         fileManager.saveMatrixToFile(matrix, fileName);
     }
 
-    private void loadMatrixFromFile(String fileName) {
-
+    private Optional<Matrix> loadMatrixFromFile(String fileName) {
         printer.printLn("Insert filename:");
         fileName += dataReader.getString();
         fileName += ".txt";
-        if (fileManager.loadMatrixFromFile(fileName).isPresent()) {
-            matrix = fileManager.loadMatrixFromFile(fileName).get();
-        }
+        return fileManager.loadMatrixFromFile(fileName);
     }
 
-    private enum DirectoryPath {
-        TEST(0, "Test directory"),
-        USER(1, "User directory");
-
-        private int value;
-        private String description;
-
-        DirectoryPath(int value, String description) {
-            this.value = value;
-            this.description = description;
-        }
-
-        @Override
-        public String toString() {
-            return value + " - " + description;
-        }
-
-        public DirectoryPath getOption(int value) {
-            try {
-                return DirectoryPath.values()[value];
-            } catch (ArrayIndexOutOfBoundsException e) {
-                throw new NoSuchElementException("No such option id: " + value);
-            }
-        }
+    private int chooseLoadingOption() {
+        printer.printLn("Load matrix from:");
+        printer.printLn("1 - test directory");
+        printer.printLn("2 - user directory");
+        return dataReader.getInt();
     }
 }

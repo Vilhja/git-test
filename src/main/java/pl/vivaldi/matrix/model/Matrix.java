@@ -1,15 +1,9 @@
 package pl.vivaldi.matrix.model;
 
-
-import java.util.Random;
-
-
 public class Matrix {
     private int rowNumber;
     private int columnNumber;
     private double[][] matrixFields;
-
-    private Random random = new Random();
 
     public Matrix() {
         this(1, 1);
