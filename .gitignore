@@ -1,6 +1,6 @@
 # Maven
 log/
-target/
+target/*
 
 # Compiled class file
 *.class
