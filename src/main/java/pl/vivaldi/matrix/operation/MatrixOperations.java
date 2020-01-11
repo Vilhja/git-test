@@ -2,8 +2,10 @@ package pl.vivaldi.matrix.operation;
 
 import pl.vivaldi.matrix.model.Matrix;
 
+import java.util.Optional;
+
 public class MatrixOperations {
-    public static Matrix addition(Matrix matrixA, Matrix matrixB) {
+    public static Optional<Matrix> addition(Matrix matrixA, Matrix matrixB) {
         if (checkAdditionCondition(matrixA, matrixB)) {
             Matrix resultMatrix = new Matrix(matrixA.getRowNumber(), matrixA.getColumnNumber());
             for (int i = 0; i < resultMatrix.getRowNumber(); i++) {
@@ -13,10 +15,9 @@ public class MatrixOperations {
                     resultMatrix.setMatrixElement(i, j, valueA + valueB);
                 }
             }
-            return resultMatrix;
+            return Optional.of(resultMatrix);
         }
-        //optional needed
-        return null;
+        return Optional.empty();
     }
 
     private static boolean checkAdditionCondition(Matrix matrixA, Matrix matrixB) {
@@ -41,7 +42,7 @@ public class MatrixOperations {
         return transposedMatrix;
     }
 
-    public static Matrix multiplication(Matrix matrixA, Matrix matrixB) {
+    public static Optional<Matrix> multiplication(Matrix matrixA, Matrix matrixB) {
         if (checkMultiplicationCondition(matrixA, matrixB)) {
             Matrix resultMatrix = new Matrix(matrixA.getRowNumber(), matrixB.getColumnNumber());
             for (int i = 0; i < resultMatrix.getRowNumber(); i++) {
@@ -54,26 +55,22 @@ public class MatrixOperations {
                     resultMatrix.setMatrixElement(i, j, sum);
                 }
             }
-            return resultMatrix;
+            return Optional.of(resultMatrix);
         }
-        //optional needed
-        return null;
+        return Optional.empty();
     }
 
     private static boolean checkMultiplicationCondition(Matrix matrixA, Matrix matrixB) {
         return matrixA.getColumnNumber() == matrixB.getRowNumber();
     }
 
-    public static Matrix subMatrix(Matrix matrix, int rowToRemove, int columnToRemove) {
+    public static Optional<Matrix> subMatrix(Matrix matrix, int rowToRemove, int columnToRemove) {
         if (checkSubMatrixCondition(matrix)) {
-            Matrix resultMatrix = new Matrix(matrix.getRowNumber() - 1,
-                    matrix.getColumnNumber() - 1);
-            resultMatrix = removeMatrixRow(matrix, rowToRemove);
+            Matrix resultMatrix = removeMatrixRow(matrix, rowToRemove);
             resultMatrix = removeMatrixColumn(resultMatrix, columnToRemove);
-            return resultMatrix;
+            return Optional.of(resultMatrix);
         }
-        //optional
-        return null;
+        return Optional.empty();
     }
 
     private static Matrix removeMatrixRow(Matrix matrix, int rowNumber) {
@@ -83,7 +80,7 @@ public class MatrixOperations {
                 double value;
                 if (i < rowNumber) {
                     value = matrix.getMatrixElement(i, j);
-                }else {
+                } else {
                     value = matrix.getMatrixElement(i + 1, j);
                 }
                 resultMatrix.setMatrixElement(i, j, value);

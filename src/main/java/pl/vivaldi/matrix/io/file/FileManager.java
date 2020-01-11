@@ -6,7 +6,9 @@ import pl.vivaldi.matrix.model.Matrix;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class FileManager {
     private DataReader dataReader;
@@ -17,27 +19,30 @@ public class FileManager {
         this.printer = printer;
     }
 
-    public Matrix loadMatrixFromFile(String fileName) {
+    public Optional<Matrix> loadMatrixFromFile(String fileName) {
         List<String> fileLines = loadFileLines(fileName);
         return createMatrixFromFileLines(fileLines);
     }
 
-    private Matrix createMatrixFromFileLines(List<String> fileLines) {
-        List<String[]> matrixRows = new ArrayList<>();
-        for (String fileLine : fileLines) {
-            String[] split = fileLine.split(" ");
-            matrixRows.add(split);
-        }
-        int rowNumber = matrixRows.size(),
-                columnNumber = matrixRows.get(0).length;
-        Matrix matrix = new Matrix(rowNumber, columnNumber);
-        for (int i = 0; i < rowNumber; i++) {
-            for (int j = 0; j < columnNumber; j++) {
-                double value = Double.parseDouble(matrixRows.get(i)[j]);
-                matrix.setMatrixElement(i, j, value);
+    private Optional<Matrix> createMatrixFromFileLines(List<String> fileLines) {
+        if (!fileLines.isEmpty()) {
+            List<List<String>> matrixRows = new ArrayList<>();
+            for (String fileLine : fileLines) {
+                String[] split = fileLine.split(" ");
+                matrixRows.add(Arrays.asList(split));
             }
+            int rowNumber = matrixRows.size(),
+                    columnNumber = matrixRows.get(0).size();
+            Matrix matrix = new Matrix(rowNumber, columnNumber);
+            for (int i = 0; i < rowNumber; i++) {
+                for (int j = 0; j < columnNumber; j++) {
+                    double value = Double.parseDouble(matrixRows.get(i).get(j));
+                    matrix.setMatrixElement(i, j, value);
+                }
+            }
+            return Optional.of(matrix);
         }
-        return matrix;
+        return Optional.empty();
     }
 
     private List<String> loadFileLines(String fileName) {

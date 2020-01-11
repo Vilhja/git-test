@@ -237,13 +237,17 @@ public class MatrixController {
     private void multiply() {
         Matrix matrixA = dataReader.createMatrix();
         Matrix matrixB = dataReader.createMatrix();
-        matrix = MatrixOperations.multiplication(matrixA, matrixB);
+        if (MatrixOperations.multiplication(matrixA, matrixB).isPresent()) {
+            matrix = MatrixOperations.multiplication(matrixA, matrixB).get();
+        }
     }
 
     private void add() {
         Matrix matrixA = dataReader.createMatrix();
         Matrix matrixB = dataReader.createMatrix();
-        matrix = MatrixOperations.addition(matrixA, matrixB);
+        if (MatrixOperations.addition(matrixA, matrixB).isPresent()) {
+            matrix = MatrixOperations.addition(matrixA, matrixB).get();
+        }
     }
 
     private void createSubMatrix() {
@@ -251,7 +255,9 @@ public class MatrixController {
         int rowToRemove = dataReader.getInt();
         printer.printLn("Which column, you want to remove?");
         int columnToRemove = dataReader.getInt();
-        matrix = MatrixOperations.subMatrix(this.matrix, rowToRemove, columnToRemove);
+        if (MatrixOperations.subMatrix(matrix, rowToRemove, columnToRemove).isPresent()) {
+            matrix = MatrixOperations.subMatrix(matrix, rowToRemove, columnToRemove).get();
+        }
     }
 
     private void createTestMatrix() {
@@ -271,7 +277,9 @@ public class MatrixController {
         printer.printLn("Insert filename:");
         fileName += dataReader.getString();
         fileName += ".txt";
-        matrix = fileManager.loadMatrixFromFile(fileName);
+        if (fileManager.loadMatrixFromFile(fileName).isPresent()) {
+            matrix = fileManager.loadMatrixFromFile(fileName).get();
+        }
     }
 
     private enum DirectoryPath {
