@@ -1,7 +1,6 @@
 package pl.vivaldi.matrix.io.file;
 
 import pl.vivaldi.matrix.io.ConsolePrinter;
-import pl.vivaldi.matrix.io.DataReader;
 import pl.vivaldi.matrix.model.Matrix;
 
 import java.io.*;
@@ -11,11 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class FileManager {
-    private DataReader dataReader;
     private ConsolePrinter printer;
 
-    public FileManager(DataReader dataReader, ConsolePrinter printer) {
-        this.dataReader = dataReader;
+    public FileManager(ConsolePrinter printer) {
         this.printer = printer;
     }
 
@@ -49,7 +46,7 @@ public class FileManager {
         List<String> fileLines = new ArrayList<>();
         try (
                 FileReader fileReader = new FileReader(fileName);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                BufferedReader bufferedReader = new BufferedReader(fileReader)
         ) {
 
             String line = bufferedReader.readLine();

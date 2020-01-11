@@ -15,6 +15,12 @@ public class Matrix {
         matrixFields = new double[rowNumber][columnNumber];
     }
 
+    public Matrix(Matrix other) {
+        this.rowNumber = other.rowNumber;
+        this.columnNumber = other.columnNumber;
+        matrixFields = other.matrixFields;
+    }
+
     public int getRowNumber() {
         return rowNumber;
     }
