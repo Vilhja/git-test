@@ -1,6 +1,6 @@
 # Maven
 log/
-target/*
+target/
 
 # Compiled class file
 *.class
@@ -27,4 +27,4 @@ target/*
 hs_err_pid*
 
 # user matrices
-src/main/resources/matrices/user/
+src/main/resources/matrices/user/*
