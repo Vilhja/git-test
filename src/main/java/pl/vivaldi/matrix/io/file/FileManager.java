@@ -71,7 +71,7 @@ public class FileManager {
                 for (int j = 0; j < matrix.getColumnNumber(); j++) {
                     double value = matrix.getMatrixElement(i, j);
                     bufferedReader.write(value + "");
-                    if (j != matrix.getRowNumber() - 1) bufferedReader.write(" ");
+                    if (j != matrix.getRowNumber()) bufferedReader.write(" ");
                 }
                 if (i != matrix.getRowNumber() - 1) bufferedReader.newLine();
             }
