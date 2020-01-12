@@ -7,6 +7,7 @@ import pl.vivaldi.matrix.io.file.FileManager;
 import pl.vivaldi.matrix.model.Matrix;
 import pl.vivaldi.matrix.operation.MatrixOperations;
 import pl.vivaldi.matrix.operation.MatrixRowOperations;
+import pl.vivaldi.matrix.solver.AutomaticMatrixSolver;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -78,6 +79,10 @@ public class MatrixController {
                 case SAVE_TO_FILE:
                     saveMatrixToFile();
                     break;
+                case SOLVER:
+                    AutomaticMatrixSolver solver = new AutomaticMatrixSolver();
+                    solver.solve(matrix);
+                    break;
                 default:
                     printer.printLn("No such option!");
             }
@@ -120,7 +125,8 @@ public class MatrixController {
         MULTIPLICATION(9, "multiply matrices"),
         ADDITION(10, "add matrices"),
         SUBMATRIX(11, "submatrix"),
-        SAVE_TO_FILE(12, "save matrix to file");
+        SAVE_TO_FILE(12, "save matrix to file"),
+        SOLVER(13, "solver");
 
         private final int value;
         private final String description;
